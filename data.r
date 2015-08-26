@@ -258,6 +258,18 @@ if (!file.exists(sponsors)) {
 s = read.csv(sponsors, stringsAsFactors = FALSE) %>%
   filter(!is.na(name_en))
 
+# remove apostrophes from names
+s$name_en = gsub("`", "", s$name_en)
+
+# missing years of birth (WP-EN)
+s$born[ s$name_en == "Yinon Magal" ] = 1947
+s$born[ s$name_en == "Manuel Trajtenberg" ] = 1950
+s$born[ s$name_en == "Eitan Broshi" ] = 1950
+s$born[ s$name_en == "Ayelet Nahmias-Verbin" ] = 1970
+s$born[ s$name_en == "Osama Saadi" ] = 1963
+s$born[ s$name_en == "Rachel Adatto" ] = 1947
+s$born = as.integer(s$born)
+
 for (i in s$photo %>% na.omit %>% unique) {
 
   f = paste0("photos/", basename(i))
