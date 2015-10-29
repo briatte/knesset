@@ -3,18 +3,19 @@ raw = data_frame()
 cat("Parsing committee memberships...\n")
 for (f in list.files("raw/mps", pattern = "mp-\\d+-en.html", full.names = TRUE)) {
 
-  l = readLines(f, encoding = "UTF-8")
+  l = readLines(f, encoding = "ISO-8859-1")
   l = l[ grepl("sBuf\\s\\+=", l) & grepl("table|tr|td", l) ]
   l = gsub("\\ssBuf\\s\\+=\\s", "", l)
   l = gsub("\"", "'", l) %>% paste0(collapse = "")
   l = gsub("';\\t?'", "", l)
   l = gsub("</ta?b?<center>", "</table>", l) # mp-13-en.html
   l = str_extract(l, "<table width=97%(.*?)</table>")
-  l = read_html(l) %>% html_table(header = TRUE, fill = TRUE)
+  l = read_html(l, encoding = "ISO-8859-1") %>%
+    html_table(header = TRUE, fill = TRUE)
   l = l[[ which(sapply(l, function(x) "Knesset Terms" %in% names(x))) ]][, 1:2 ]
   # legislature LOCF
   for (i in 1:nrow(l)) {
-    if (l[ i, 1] == "")
+    if (is.na(l[i, 1]) || l[i, 1] == "")
       l[ i, 1] = l[ i - 1, 1]
   }
 
