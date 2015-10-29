@@ -10,7 +10,7 @@ for (f in list.files("raw/mps", pattern = "mp-\\d+-en.html", full.names = TRUE))
   l = gsub("';\\t?'", "", l)
   l = gsub("</ta?b?<center>", "</table>", l) # mp-13-en.html
   l = str_extract(l, "<table width=97%(.*?)</table>")
-  l = html(l) %>% html_table(header = TRUE, fill = TRUE)
+  l = read_html(l) %>% html_table(header = TRUE, fill = TRUE)
   l = l[[ which(sapply(l, function(x) "Knesset Terms" %in% names(x))) ]][, 1:2 ]
   # legislature LOCF
   for (i in 1:nrow(l)) {

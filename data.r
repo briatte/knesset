@@ -6,7 +6,7 @@ sponsors = "data/sponsors.csv"
 # ==============================================================================
 if (!file.exists(bills)) {
 
-  p = html("https://oknesset.org/bill/") %>%
+  p = read_html("https://oknesset.org/bill/") %>%
     html_nodes(".pagination a") %>%
     html_text %>%
     as.integer
@@ -25,7 +25,7 @@ if (!file.exists(bills)) {
 
     }
 
-    h = html(f)
+    h = read_html(f)
     b = rbind(b, data_frame(
       url = html_nodes(h, ".item-title a") %>% html_attr("href"),
       title = html_nodes(h, ".item-title a") %>% html_text,
@@ -62,7 +62,7 @@ if (!file.exists(bills)) {
 
     }
 
-    h = html(f)
+    h = read_html(f)
 
     # date
     d = html_nodes(h, xpath = "//h2[text()='יזום הצעת החוק']/following-sibling::ul/li/a") %>% html_text
@@ -132,7 +132,7 @@ if (!file.exists(sponsors)) {
     if (f == "raw/mps/mp-714.html")
       next
 
-    h = html(f)
+    h = read_html(f)
     u = html_nodes(h, xpath = "//div[@class='social-links']//a[contains(@href, 'knesset.gov.il')]") %>%
       html_attr("href")
     w = html_nodes(h, xpath = "//div[@class='social-links']//a[contains(@href, 'wikipedia')]") %>%
@@ -176,7 +176,7 @@ if (!file.exists(sponsors)) {
 
   for (i in 20:18) {
 
-    h = html(paste0("https://oknesset.org/parties-members/", i))
+    h = read_html(paste0("https://oknesset.org/parties-members/", i))
 
     # party blocs
     f = html_nodes(h, xpath = "//h4/..") %>%
@@ -190,7 +190,7 @@ if (!file.exists(sponsors)) {
     p = rbind(p, cbind(legislature = i, bind_rows(f)))
 
     # gender
-    h = html(paste0("http://www.knesset.gov.il/mk/eng/MKIndexByKnesset_eng.asp?knesset=", i, "&view=2")) %>%
+    h = read_html(paste0("http://www.knesset.gov.il/mk/eng/MKIndexByKnesset_eng.asp?knesset=", i, "&view=2")) %>%
       html_nodes(xpath = "//a[contains(@href, 'id_t')]") %>% html_attr("href")
 
     s$sex[ s$uid %in% gsub("\\D", "", h) ] = "F"
