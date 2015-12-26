@@ -284,6 +284,9 @@ for (i in s$photo %>% na.omit %>% unique) {
 # switch to Open Knesset URLs (none missing)
 s$url = paste0("https://oknesset.org/member/", s$uid)
 
+# subset sponsors with no mandate information
+s = subset(s, !is.na(legislature))
+
 # ==============================================================================
 # QUALITY CONTROL
 # ==============================================================================
